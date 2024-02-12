@@ -5,13 +5,15 @@ Learn Docker with simple node app
 ## Table of Contents
 
 - [Introduction](#introduction)
-- [Features](#features)
-- [Getting Started](#getting-started)
+- [Setup](#setup)
+- [Dockerfile Configurations](#dockerfile-configurations)
   - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
+  - [Build Docker Image](#build-docker-image)
+- [Run Docker Image (Without Using docker-compose)](#run-docker-image-without-using-docker-compose)
+- [Docker Compose](#docker-compose)
+  - [Docker Compose Base File](#docker-compose-base-file)
+  - [Up Docker Compose](#up-docker-compose)
+- [Additional Commands](#additional-commands)
 - [Acknowledgments](#acknowledgments)
 
 ## Introduction
