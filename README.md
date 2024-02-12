@@ -1,4 +1,3 @@
-````markdown
 # Docker-Node
 
 Learn Docker with a simple Node app.
@@ -27,7 +26,6 @@ The main purpose of this project is to dockerize a simple NodeJS application and
 git clone https://github.com/quan0401/node_with_docker
 cd node_with_docker
 ```
-````
 
 If NodeJS is already installed on your computer, use `npm run dev` to run the NodeJS project application on `localhost:3000`. You will see some text displayed in the browser.
 
