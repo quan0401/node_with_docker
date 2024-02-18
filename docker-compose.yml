@@ -1,4 +1,5 @@
 version: "3"
+
 services:
   node-app:
     build: .
@@ -11,3 +12,14 @@ services:
       - PORT=3000
     # env_file:
     #   - ./.env
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=quan0401
+      - MONGO_INITDB_ROOT_PASSWORD=mypassword
+    volumes:
+      - mongo-db:/data/db
+
+volumes:
+  mongo-db:
