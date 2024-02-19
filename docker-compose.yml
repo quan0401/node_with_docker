@@ -10,6 +10,9 @@ services:
       - /app/node_modules
     environment:
       - PORT=3000
+    # depends on mongo so mongo service will be started first
+    depends_on:
+      - mongo
     # env_file:
     #   - ./.env
   mongo:
