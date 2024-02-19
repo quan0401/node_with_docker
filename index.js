@@ -7,6 +7,7 @@ const {
   MONGO_PWD,
 } = require("./config/config");
 const postRouter = require("./routes/postRoutes");
+const userRouter = require("./routes/userRoutes");
 
 const app = express();
 
@@ -33,8 +34,8 @@ connectWithRetry();
 app.use(express.json()); // to pass in body
 
 // Routes
-
 app.use("/api/v1/posts", postRouter);
+app.use("/api/v1/users", userRouter);
 
 const port = process.env.PORT || 3000;
 
