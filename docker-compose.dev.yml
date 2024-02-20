@@ -13,4 +13,10 @@ services:
       - NODE_ENV=development
       - MONGO_USER=quan0401
       - MONGO_PWD=mypassword
+      - SESSION_SECRET=secret
     command: npm run dev
+
+  mongo:
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=quan0401
+      - MONGO_INITDB_ROOT_PASSWORD=mypassword
