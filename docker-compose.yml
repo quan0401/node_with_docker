@@ -10,6 +10,7 @@ services:
 
   node-app:
     build: .
+    image: quan0401/node-app
     # ports:
     #   - "3000-3001:3000"
     # No need to publish ports for our node-application since now we use nginx
