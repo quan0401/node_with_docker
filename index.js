@@ -45,7 +45,7 @@ const connectWithRetry = () => {
     });
 };
 app.get("/api", (req, res) => {
-  res.send("<h2>Hello world with Docker 🐳!!!</h2>");
+  res.send("<h2>Hello world with Docker 🐳!!! using docker hub </h2>");
   console.log("Yeah it ran");
 });
 

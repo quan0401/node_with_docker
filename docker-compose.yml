@@ -9,7 +9,10 @@ services:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
 
   node-app:
-    build: .
+    build:
+      context: .
+      platforms:
+        - linux/amd64 # Adjust to the desired platform
     image: quan0401/node-app
     # ports:
     #   - "3000-3001:3000"
@@ -25,6 +28,7 @@ services:
       - redis
     # env_file:
     #   - ./.env
+
   mongo:
     image: mongo
     restart: unless-stopped
