@@ -1,10 +1,18 @@
 version: "3"
 
 services:
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "3000:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+
   node-app:
     build: .
-    ports:
-      - "3000:3000"
+    # ports:
+    #   - "3000-3001:3000"
+    # No need to publish ports for our node-application since now we use nginx
     volumes:
       - ./:/app
       - /app/node_modules
@@ -13,6 +21,7 @@ services:
     # depends on mongo so mongo service will be started first
     depends_on:
       - mongo
+      - redis
     # env_file:
     #   - ./.env
   mongo:

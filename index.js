@@ -9,7 +9,7 @@ const {
   SESSION_SECRET,
   REDIS_PORT,
 } = require("./config/config");
-
+const cors = require("cors");
 const postRouter = require("./routes/postRoutes");
 const userRouter = require("./routes/userRoutes");
 
@@ -29,13 +29,14 @@ const app = express();
 const mongoURI = `mongodb://${MONGO_USER}:${MONGO_PWD}@${MONGO_IP}:${MONGO_PORT}/?authSource=admin`;
 
 const connectWithRetry = () => {
+  mongoose.set("useNewUrlParser", true);
+  mongoose.set("useFindAndModify", false);
+  mongoose.set("useCreateIndex", true);
   mongoose
     // .connect("mongodb://quan0401:mypassword@172.31.0.2:27017/?authSource=admin")
     // .connect("mongodb://quan0401:mypassword@mongo:27017/?authSource=admin")
     .connect(mongoURI, {
-      useNewUrlParser: true,
       useUnifiedTopology: true,
-      useFindAndModify: false,
     })
     .then(() => console.log("Successfully connected to DB"))
     .catch((e) => {
@@ -43,24 +44,26 @@ const connectWithRetry = () => {
       setTimeout(connectWithRetry, 5000);
     });
 };
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   res.send("<h2>Hello world with Docker 🐳</h2>");
+  console.log("Yeah it ran");
 });
 
 connectWithRetry();
 
 // Middle ware
 app.use(express.json()); // to pass in body
-
+app.enable("trust proxy");
+app.use(cors({}));
 app.use(
   session({
     store: new RedisStore({
       client: redisClient,
     }),
     secret: SESSION_SECRET,
+    saveUninitialized: false,
+    resave: false,
     cookie: {
-      resave: false,
-      saveUninitialized: false,
       secure: false,
       httpOnly: true,
       maxAge: 300000,
