@@ -9,6 +9,7 @@ services:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
 
   node-app:
+    platform: "linux/arm64"
     build:
       context: .
       platforms:
