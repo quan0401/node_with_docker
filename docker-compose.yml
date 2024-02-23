@@ -12,7 +12,8 @@ services:
     build:
       context: .
       platforms:
-        - linux/amd64 # Adjust to the desired platform
+        - linux/amd64
+        - linux/arm64
     image: quan0401/node-app
     # ports:
     #   - "3000-3001:3000"
