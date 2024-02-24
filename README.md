@@ -22,9 +22,17 @@ The main purpose of this project is to dockerize a simple NodeJS application and
 
 ## Setup
 
+### Option 1: Run on local machine
+
 ```bash
 git clone https://github.com/quan0401/node_with_docker
 cd node_with_docker
+```
+
+### Option 2: Run on docker (recommended)
+
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
 If NodeJS is already installed on your computer, use `npm run dev` to run the NodeJS project application on `localhost:3000`. You will see some text displayed in the browser.
@@ -61,29 +69,13 @@ CMD ["node", "index.js"]
 
 Docker must be installed on your local machine.
 
-### Build Docker Image
+### run docker image
 
 ```bash
-docker build . -t node-app-img
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
 Builds the Docker image based on the Dockerfile. The `-t` flag specifies the image name as `node-app-img`.
-
-## Run Docker Image (Without Using docker-compose)
-
-```bash
-docker run -d --rm -v $(pwd):/app:ro -v /app/node_modules -p 3000:3000 --name node-app node-app-img
-```
-
-Runs the Docker container:
-
-- `-d`: Runs in detached mode.
-- `--rm`: Automatically removes the container when it stops.
-- `-v $(pwd):/app:ro`: Syncs files/folders between the current folder and `/app` in the container. `:ro` is read-only to prevent file creation or override in the container.
-- `-p 3000:3000`: Maps port 3000 on the local machine to port 3000 on the container.
-- `--name`: Names the container as `node-app`.
-
-## Docker Compose
 
 ### Docker Compose Base File
 
@@ -91,22 +83,49 @@ Create a `docker-compose.yml` file with the following content:
 
 ```yaml
 version: "3"
+
 services:
-  node-app:
-    build: .
+  nginx:
+    image: nginx:stable-alpine
     ports:
-      - "3000:3000"
+      - "3000:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+
+  node-app:
+    platform: "linux/arm64"
+    build:
+      context: .
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    image: quan0401/node-app
     volumes:
       - ./:/app
       - /app/node_modules
     environment:
       - PORT=3000
+    depends_on:
+      - mongo
+      - redis
+
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    volumes:
+      - mongo-db:/data/db
+
+  redis:
+    image: redis
+
+volumes:
+  mongo-db:
 ```
 
 ### Up Docker Compose
 
 ```bash
-docker-compose -f docker-compose.yml up
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
 Uses the Docker Compose command to create and start Docker containers based on the configurations in the specified Compose file.
@@ -114,8 +133,9 @@ Uses the Docker Compose command to create and start Docker containers based on t
 ## Additional Commands
 
 - `docker exec -it node-app bash`: Access the container terminal in detached mode using the Bash shell.
-- `docker-compose build --build`: Rebuilds the image when changes are made to the application.
-- `docker-compose down -v`: Stops running containers and removes anonymous volumes.
+- `docker-compose -f docker-compose.yml -f docker-compose.dev.yml build`: Rebuilds the image when changes are made to the application.
+- `docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v`: Stops running containers and removes anonymous volumes.
+- `docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --scale node-app=2`: start two instances of node-app service
 
 ## Acknowledgments
 
