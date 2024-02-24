@@ -29,15 +29,15 @@ git clone https://github.com/quan0401/node_with_docker
 cd node_with_docker
 ```
 
+If NodeJS is already installed on your computer, use `npm run dev` to run the NodeJS project application on `localhost:3000`. You will see some text displayed in the browser.
+
+In case NodeJS is not installed, consider installing it, as we aim to learn Docker and NodeJS together.
+
 ### Option 2: Run on docker (recommended)
 
 ```bash
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
-
-If NodeJS is already installed on your computer, use `npm run dev` to run the NodeJS project application on `localhost:3000`. You will see some text displayed in the browser.
-
-In case NodeJS is not installed, consider installing it, as we aim to learn Docker and NodeJS together.
 
 ## Dockerfile Configurations
 
@@ -69,7 +69,7 @@ CMD ["node", "index.js"]
 
 Docker must be installed on your local machine.
 
-### run docker image
+### Use docker-compose to run
 
 ```bash
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
