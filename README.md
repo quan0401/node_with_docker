@@ -35,6 +35,8 @@ If NodeJS is not installed, consider installing it, as we aim to learn Docker an
 ### Option 2: Run on Docker (recommended)
 
 ```bash
+git clone https://github.com/quan0401/node_with_docker
+cd node_with_docker
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
