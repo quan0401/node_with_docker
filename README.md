@@ -1,6 +1,6 @@
 # Docker-Node
 
-Learn Docker with a simple Node app.
+Learn Docker with a simple Node app
 
 ## Table of Contents
 
@@ -22,14 +22,21 @@ The main purpose of this project is to dockerize a simple NodeJS application and
 
 ## Setup
 
+### Option 1: Run on the local machine
+
 ```bash
 git clone https://github.com/quan0401/node_with_docker
 cd node_with_docker
+npm run dev # If NodeJS is already installed
 ```
 
-If NodeJS is already installed on your computer, use `npm run dev` to run the NodeJS project application on `localhost:3000`. You will see some text displayed in the browser.
+If NodeJS is not installed, consider installing it, as we aim to learn Docker and NodeJS together.
 
-In case NodeJS is not installed, consider installing it, as we aim to learn Docker and NodeJS together.
+### Option 2: Run on Docker (recommended)
+
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+```
 
 ## Dockerfile Configurations
 
@@ -50,40 +57,19 @@ CMD ["node", "index.js"]
 ### Explanation:
 
 - `FROM`: Specifies the base environment for the Docker image, using the official NodeJS image with version 18.
-- `WORKDIR`: Sets the working directory inside the image to `/app`.
-- `COPY package.json`: Copies the package.json file to leverage Docker caching for faster builds.
-- `ARG NODE_ENV`: Sets an environment variable to determine whether to install devDependencies.
-- `ENV PORT`: Sets the environment variable for the application port.
-- `EXPOSE`: Exposes the specified port outside the container.
-- `CMD`: Specifies the command to run when the container starts.
+- ...
 
 ### Prerequisites
 
 Docker must be installed on your local machine.
 
-### Build Docker Image
+### Use docker-compose to run
 
 ```bash
-docker build . -t node-app-img
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
-Builds the Docker image based on the Dockerfile. The `-t` flag specifies the image name as `node-app-img`.
-
-## Run Docker Image (Without Using docker-compose)
-
-```bash
-docker run -d --rm -v $(pwd):/app:ro -v /app/node_modules -p 3000:3000 --name node-app node-app-img
-```
-
-Runs the Docker container:
-
-- `-d`: Runs in detached mode.
-- `--rm`: Automatically removes the container when it stops.
-- `-v $(pwd):/app:ro`: Syncs files/folders between the current folder and `/app` in the container. `:ro` is read-only to prevent file creation or override in the container.
-- `-p 3000:3000`: Maps port 3000 on the local machine to port 3000 on the container.
-- `--name`: Names the container as `node-app`.
-
-## Docker Compose
+Builds the Docker image based on the Dockerfile.
 
 ### Docker Compose Base File
 
@@ -91,22 +77,49 @@ Create a `docker-compose.yml` file with the following content:
 
 ```yaml
 version: "3"
+
 services:
-  node-app:
-    build: .
+  nginx:
+    image: nginx:stable-alpine
     ports:
-      - "3000:3000"
+      - "3000:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+
+  node-app:
+    platform: "linux/arm64"
+    build:
+      context: .
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    image: quan0401/node-app
     volumes:
       - ./:/app
       - /app/node_modules
     environment:
       - PORT=3000
+    depends_on:
+      - mongo
+      - redis
+
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    volumes:
+      - mongo-db:/data/db
+
+  redis:
+    image: redis
+
+volumes:
+  mongo-db:
 ```
 
 ### Up Docker Compose
 
 ```bash
-docker-compose -f docker-compose.yml up
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
 Uses the Docker Compose command to create and start Docker containers based on the configurations in the specified Compose file.
@@ -114,14 +127,10 @@ Uses the Docker Compose command to create and start Docker containers based on t
 ## Additional Commands
 
 - `docker exec -it node-app bash`: Access the container terminal in detached mode using the Bash shell.
-- `docker-compose build --build`: Rebuilds the image when changes are made to the application.
-- `docker-compose down -v`: Stops running containers and removes anonymous volumes.
+- ...
 
 ## Acknowledgments
 
 Give credit to any third-party libraries, tools, or resources that you used or were inspired by.
 
-```
-
-Feel free to make any further adjustments or add more specific details based on your project's requirements.
-```
+Feel free to modify any part of it according to your needs!
