@@ -40,6 +40,10 @@ cd node_with_docker
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
+### Prerequisites
+
+Docker must be installed on your local machine.
+
 ## Dockerfile Configurations
 
 ```Dockerfile
@@ -60,10 +64,6 @@ CMD ["node", "index.js"]
 
 - `FROM`: Specifies the base environment for the Docker image, using the official NodeJS image with version 18.
 - ...
-
-### Prerequisites
-
-Docker must be installed on your local machine.
 
 ### Use docker-compose to run
 
